@@ -66,15 +66,7 @@ def extract_dialogues(text: str, model: str = "gpt-4o-mini") -> list[dict]:
     """텍스트에서 대화문 추출"""
     if not client:
         raise RuntimeError("OpenAI client not initialized. Call init_client() first.")
-    cleaned_text = (
-    text[:4000]
-    .replace("“", '"')
-    .replace("”", '"')
-    .replace("‘", "'")
-    .replace("’", "'")
-    .replace("—", "-")
-    .replace("…", "...")
-)
+prompt = EXTRACTION_PROMPT.format(text=text[:4000])
 prompt = EXTRACTION_PROMPT.format(text=cleaned_text)
     resp = client.chat.completions.create(
         model=model,
