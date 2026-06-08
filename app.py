@@ -209,8 +209,10 @@ with tab_book:
                         st.session_state.dialogues = dialogues
                         st.session_state.filtered_dialogues = dialogues
                         st.success(f"✅ {len(dialogues)}개의 대화문을 추출했습니다!")
-                    except Exception as e:
-                        st.error(f"추출 실패: {e}")
+                    import traceback
+
+                    except Exception: st.error(traceback.format_exc())
+
         with col_b:
             if not st.session_state.api_ready:
                 st.warning("⚠️ 사이드바에서 API 키를 먼저 연결하세요.")
