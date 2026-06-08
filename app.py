@@ -616,6 +616,7 @@ with tab_roleplay:
                     if len(st.session_state.roleplay_messages) >= 2 and st.session_state.api_ready:
                         user_lines = [m["content"] for m in st.session_state.roleplay_messages if m["role"]=="user"]
                         import dialogue_extractor as de
+                        de.init_client(st.session_state.openai_key)
                         with st.spinner("대화 분석 중..."):
                             try:
                                 resp = de.client.chat.completions.create(
