@@ -618,7 +618,7 @@ with tab_roleplay:
                         import dialogue_extractor as de
                         with st.spinner("대화 분석 중..."):
                             try:
-                                resp = de._client.chat.completions.create(
+                                resp = de.client.chat.completions.create(
                                     model="gpt-4o-mini",
                                     messages=[{
                                         "role":"user",
