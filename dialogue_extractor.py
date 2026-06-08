@@ -23,10 +23,7 @@ Return a JSON array. Each element must have:
 - "modern_equivalent": a modern, natural rephrasing of the line (helpful for classic literature)
 - "key_expressions": list of up to 3 notable phrases/idioms worth learning
 
-Text:
-"""
-{text}
-"""
+Text: {text}
 
 Respond ONLY with a valid JSON array. No extra text."""
 
