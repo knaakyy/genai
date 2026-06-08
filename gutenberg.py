@@ -18,24 +18,6 @@ POPULAR_BOOKS = {
     "Dracula (Bram Stoker)": 345,
 }
 
-def search_books(query: str, limit: int = 10) -> list[dict]:
-    """책 제목/저자로 Gutenberg 검색"""
-    try:
-        resp = requests.get(GUTENBERG_SEARCH_URL, params={"search": query, "languages": "en"}, timeout=10)
-        resp.raise_for_status()
-        data = resp.json()
-        results = []
-        for book in data.get("results", [])[:limit]:
-            authors = ", ".join(a["name"] for a in book.get("authors", []))
-            results.append({
-                "id": book["id"],
-                "title": book["title"],
-                "authors": authors,
-            })
-        return results
-    except Exception as e:
-        return []
-
 def fetch_book_text(book_id: int) -> str:
     """Gutenberg에서 텍스트 다운로드"""
     urls = [
