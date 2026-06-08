@@ -159,60 +159,34 @@ tab_book, tab_dialogues, tab_shadow, tab_trans, tab_roleplay = st.tabs([
 # ═══════════════════════════════════════════════════════════════════════════════
 with tab_book:
     st.markdown("### 원서 선택")
-    col1, col2 = st.columns([1, 1])
 
-    with col1:
-        st.markdown("#### 📋 인기 도서 목록")
-        import gutenberg as gb
-        book_options = list(gb.POPULAR_BOOKS.keys())
-        selected_book = st.selectbox("도서를 선택하세요", ["-- 선택하세요 --"] + book_options)
+    st.markdown("#### 📋 인기 도서 목록")
 
-        if st.button("📥 선택한 도서 불러오기") and selected_book != "-- 선택하세요 --":
-            book_id = gb.POPULAR_BOOKS[selected_book]
-            with st.spinner(f"'{selected_book}' 다운로드 중..."):
-                raw = gb.fetch_book_text(book_id)
-                if raw:
-                    processed = gb.preprocess_text(raw)
-                    st.session_state.book_text = processed
-                    st.session_state.book_title = selected_book
-                    st.session_state.chapters = gb.extract_chapters(processed)
-                    st.session_state.dialogues = []
-                    st.success(f"✅ '{selected_book}' 로드 완료! ({len(processed):,}자)")
-                else:
-                    st.error("❌ 도서를 불러오지 못했습니다. 잠시 후 다시 시도하세요.")
+    import gutenberg as gb
+    book_options = list(gb.POPULAR_BOOKS.keys())
+    selected_book = st.selectbox(
+        "도서를 선택하세요",
+        ["-- 선택하세요 --"] + book_options
+    )
 
-    with col2:
-        st.markdown("#### 🔍 도서 검색")
-        search_q = st.text_input("제목 또는 저자 입력", placeholder="e.g. Sherlock Holmes")
-        if st.button("🔍 검색") and search_q:
-            with st.spinner("검색 중..."):
-                results = gb.search_books(search_q)
-            if results:
-                for r in results:
-                    col_a, col_b = st.columns([3, 1])
-                    col_a.write(f"**{r['title']}** — {r['authors']} (ID: {r['id']})")
-                    if col_b.button("불러오기", key=f"load_{r['id']}"):
-                        with st.spinner("다운로드 중..."):
-                            raw = gb.fetch_book_text(r["id"])
-                            if raw:
-                                processed = gb.preprocess_text(raw)
-                                st.session_state.book_text = processed
-                                st.session_state.book_title = r["title"]
-                                st.session_state.chapters = gb.extract_chapters(processed)
-                                st.session_state.dialogues = []
-                                st.success(f"✅ '{r['title']}' 로드 완료!")
+    if st.button("📥 선택한 도서 불러오기") and selected_book != "-- 선택하세요 --":
+        book_id = gb.POPULAR_BOOKS[selected_book]
+
+        with st.spinner(f"'{selected_book}' 다운로드 중..."):
+            raw = gb.fetch_book_text(book_id)
+
+            if raw:
+                processed = gb.preprocess_text(raw)
+                st.session_state.book_text = processed
+                st.session_state.book_title = selected_book
+                st.session_state.chapters = gb.extract_chapters(processed)
+                st.session_state.dialogues = []
+
+                st.success(
+                    f"✅ '{selected_book}' 로드 완료! ({len(processed):,}자)"
+                )
             else:
-                st.info("검색 결과가 없습니다.")
-
-        st.markdown("#### 📤 직접 텍스트 입력")
-        direct_text = st.text_area("텍스트를 붙여넣으세요", height=150, placeholder="원서 텍스트를 직접 붙여넣기...")
-        direct_title = st.text_input("도서 제목", placeholder="제목 입력")
-        if st.button("📋 텍스트 사용") and direct_text:
-            st.session_state.book_text = gb.preprocess_text(direct_text)
-            st.session_state.book_title = direct_title or "사용자 입력 텍스트"
-            st.session_state.chapters = {"Full Text": direct_text}
-            st.session_state.dialogues = []
-            st.success("✅ 텍스트 등록 완료!")
+                st.error("❌ 도서를 불러오지 못했습니다. 잠시 후 다시 시도하세요.")
 
     # 챕터 선택 & 대화문 추출
     if st.session_state.book_text:
