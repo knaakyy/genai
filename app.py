@@ -7,6 +7,7 @@ import streamlit as st
 import os
 import json
 import time
+import traceback
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -209,9 +210,8 @@ with tab_book:
                         st.session_state.dialogues = dialogues
                         st.session_state.filtered_dialogues = dialogues
                         st.success(f"✅ {len(dialogues)}개의 대화문을 추출했습니다!")
-                    import traceback
-
-                    except Exception: st.error(traceback.format_exc())
+                    except Exception as e:
+                        st.error(traceback.format_exc())
 
         with col_b:
             if not st.session_state.api_ready:
