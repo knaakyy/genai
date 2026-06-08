@@ -28,6 +28,7 @@ def fetch_book_text(book_id: int) -> str:
     for url in urls:
         try:
             resp = requests.get(url, timeout=15)
+            resp.encoding = "utf-8"
             if resp.status_code == 200:
                 text = resp.text
                 # Gutenberg 헤더/푸터 제거
